@@ -31,12 +31,10 @@
 	
 	<!-- MyBatis(1) -->
 	<!--C:\java\springsource\vfabric-tc-server-developer-2.7.2.RELEASE\tomcat-7.0.30.A.RELEASE\lib 에 mysql...jar 파일 복사-->
-	<bean id="dataSource" class="org.apache.tomcat.dbcp.dbcp.BasicDataSource" destroy-method="close">
-		<property name="driverClassName" value="com.mysql.jdbc.Driver"/>
-		<property name="url" value="jdbc:mysql://1.1.1.1:3306/gnub4" />
-		<property name="username" value="usr" />
-		<property name="password" value="pwd" />
+	<bean id="dataSource" class="org.springframework.jndi.JndiObjectFactoryBean" >
+		<property name="jndiName" value="java:/comp/env/jdbc/gnub4DB" />
 	</bean>
+	
 	<!-- MyBatis(2) SqlSessionFactory설정(dataSource주입,mapper파일에 대한 정보) -->
 	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
 		<property name="dataSource" ref="dataSource"/>
