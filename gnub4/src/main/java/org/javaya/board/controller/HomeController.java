@@ -1,4 +1,4 @@
-package org.javaya.board;
+package org.javaya.board.controller;
 
 import java.text.DateFormat;
 import java.util.Date;
