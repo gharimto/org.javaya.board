@@ -1,8 +1,50 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+		http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/tx
+		http://www.springframework.org/schema/tx/spring-tx.xsd
+		http://www.springframework.org/schema/aop 
+		http://www.springframework.org/schema/aop/spring-aop.xsd
+	">
 	
-	<!-- Root Context: defines shared resources visible to all other web components -->
-		
+	<!-- spring3 transaction(1) -->
+	<tx:advice id="txAdvice" transaction-manager="txManager">
+		<!-- the transactional semantics... -->
+		<tx:attributes>
+			<tx:method name="get*" read-only="true" />
+			<tx:method name="*" />
+		</tx:attributes>
+	</tx:advice>
+	<!-- spring3 transaction(2) -->
+	<aop:config>
+		<aop:pointcut id="serviceOperation" expression="execution(* org.javaya.board.gnub4.service.*.*(..))"/>
+		<aop:advisor advice-ref="txAdvice" pointcut-ref="serviceOperation"/>
+	</aop:config>
+	<!-- spring3 transaction(3) -->
+	<bean id="txManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource"/>
+	</bean>
+	
+	<!-- MyBatis(1) -->
+	<!--C:\java\springsource\vfabric-tc-server-developer-2.7.2.RELEASE\tomcat-7.0.30.A.RELEASE\lib 에 mysql...jar 파일 복사-->
+	<bean id="dataSource" class="org.apache.tomcat.dbcp.dbcp.BasicDataSource" destroy-method="close">
+		<property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+		<property name="url" value="jdbc:mysql://1.1.1.1:3306/gnub4" />
+		<property name="username" value="usr" />
+		<property name="password" value="pwd" />
+	</bean>
+	<!-- MyBatis(2) SqlSessionFactory설정(dataSource주입,mapper파일에 대한 정보) -->
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource"/>
+		<property name="mapperLocations" value="classpath:org/javaya/board/gnub4/map/*.xml"/>
+	</bean>
+	<!-- MyBatis(3) SqlSessionTemplate설정(SqlSessionFactory주입) -->
+	<bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate">
+		<constructor-arg ref="sqlSessionFactory" index="0"/>
+	</bean>
+	
 </beans>

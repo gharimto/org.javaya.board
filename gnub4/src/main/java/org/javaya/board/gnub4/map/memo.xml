@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.javaya.board.gnub4.map.memo">
+	<insert id="sampleCreateSeq0" parameterType="java.util.Map">
+		CREATE SEQUENCE sample_seq0 INCREMENT 1 MINVALUE 1 START 1
+	</insert>
+	<insert id="sampleCreate" parameterType="java.util.Map">
+		CREATE TABLE SAMPLE ( id int NOT NULL primary key DEFAULT nextval('sample_seq0'), email varchar(64), name varchar(32) )
+	</insert>
+	<insert id="sampleAdd" parameterType="java.util.Map">
+		insert into SAMPLE (email, name) values (#{email}, #{name})
+	</insert>
+	<select id="sampleGetList" resultType="java.util.Map">
+		select * from SAMPLE
+	</select>
+	<delete id="sampleRemove" parameterType="int">
+		delete from SAMPLE where id=#{value}
+	</delete>
+	<select id="sampleGetOne" resultType="java.util.Map" parameterType="String">
+		select * from SAMPLE where id=#{value}
+	</select>
+</mapper>
